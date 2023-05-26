@@ -1,16 +1,18 @@
 server:
-  port: 8888
+  port: 8888  # web服务的端口
 
 spring:
   application:
     name: dynamic-tp-zookeeper-demo
   dynamic:
     tp:
-      config-type: json               # zookeeper支持properties / json 配置
+      enabledCollect: true              # 是否启用采集
+      collectorTypes: INTERNAL_LOGGING  # micrometer,logging
+      config-type: json                 # zookeeper支持properties / json 配置
       zookeeper:
-        zk-connect-str: 127.0.0.1:2181
-        root-node: /configserver/dev
-        node: dtp-group
+        zk-connect-str: 127.0.0.1:2181  # zk地址
+        root-node: /configserver/dev    # zk的root节点路径
+        node: dtp-group                 # zk
         config-key: dynamic-tp-zookeeper-demo-json   # json 用到
 
 

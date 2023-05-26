@@ -11,35 +11,17 @@ import lombok.Getter;
 @Getter
 public enum NotifyItemEnum {
 
-    /**
-     * Config change notify.
-     */
+    /** 配置变更通知 */
     CHANGE("change"),
-
-    /**
-     * ThreadPool liveness notify.
-     * liveness = activeCount / maximumPoolSize
-     */
+    /** 活跃性通知：liveness = activeCount / maximumPoolSize */
     LIVENESS("liveness"),
-
-    /**
-     * Capacity threshold notify
-     */
+    /** 队列容量阈值通知 */
     CAPACITY("capacity"),
-
-    /**
-     * Reject notify.
-     */
+    /** 拒绝任务触发通知 */
     REJECT("reject"),
-
-    /**
-     * Task run timeout alarm.
-     */
+    /** 任务执行超时触发通知 */
     RUN_TIMEOUT("run_timeout"),
-
-    /**
-     * Task queue wait timeout alarm.
-     */
+    /** 任务在队列中等待超时触发通知 */
     QUEUE_TIMEOUT("queue_timeout");
 
     private final String value;

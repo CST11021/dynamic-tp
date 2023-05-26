@@ -42,10 +42,13 @@ public class DtpAdapterListener implements GenericApplicationListener {
     public void onApplicationEvent(@NonNull ApplicationEvent event) {
         try {
             if (event instanceof RefreshEvent) {
+                // 配置变更事件
                 doRefresh(((RefreshEvent) event).getDtpProperties());
             } else if (event instanceof CollectEvent) {
+                // 线程池状态采集事件
                 doCollect(((CollectEvent) event).getDtpProperties());
             } else if (event instanceof AlarmCheckEvent) {
+                // 预警事件
                 doAlarmCheck(((AlarmCheckEvent) event).getDtpProperties());
             }
         } catch (Exception e) {

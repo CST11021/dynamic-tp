@@ -31,6 +31,7 @@ import static org.dromara.dynamictp.common.constant.DynamicTpConst.SCHEDULE_NOTI
 @Slf4j
 public class DtpMonitor implements ApplicationRunner {
 
+    /** 采集线程池状态的线程 */
     private static final ScheduledExecutorService MONITOR_EXECUTOR = new ScheduledThreadPoolExecutor(
             1, new NamedThreadFactory("dtp-monitor", true));
 
@@ -42,8 +43,7 @@ public class DtpMonitor implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        MONITOR_EXECUTOR.scheduleWithFixedDelay(this::run,
-                0, dtpProperties.getMonitorInterval(), TimeUnit.SECONDS);
+        MONITOR_EXECUTOR.scheduleWithFixedDelay(this::run, 0, dtpProperties.getMonitorInterval(), TimeUnit.SECONDS);
     }
 
     private void run() {
@@ -52,6 +52,11 @@ public class DtpMonitor implements ApplicationRunner {
         collect(executorNames);
     }
 
+    /**
+     * 采集线程池状态
+     *
+     * @param executorNames
+     */
     private void collect(Set<String> executorNames) {
         if (!dtpProperties.isEnabledCollect()) {
             return;
@@ -60,17 +65,38 @@ public class DtpMonitor implements ApplicationRunner {
             ExecutorWrapper wrapper = DtpRegistry.getExecutorWrapper(x);
             doCollect(ExecutorConverter.toMetrics(wrapper));
         });
+        // 发布采集事件
         publishCollectEvent();
     }
 
+    /**
+     * 检查是否需要发送消息通知
+     *
+     * @param executorNames
+     */
     private void checkAlarm(Set<String> executorNames) {
         executorNames.forEach(x -> {
             ExecutorWrapper wrapper = DtpRegistry.getExecutorWrapper(x);
             AlarmManager.doAlarmAsync(wrapper, SCHEDULE_NOTIFY_ITEMS);
         });
+
+        // 发布消息通知检查事件
         publishAlarmCheckEvent();
     }
 
+    /**
+     * 发布事件
+     */
+    private void publishAlarmCheckEvent() {
+        AlarmCheckEvent event = new AlarmCheckEvent(this, dtpProperties);
+        ApplicationContextHolder.publishEvent(event);
+    }
+
+    /**
+     * 采集线程池状态
+     *
+     * @param threadPoolStats
+     */
     private void doCollect(ThreadPoolStats threadPoolStats) {
         try {
             CollectorHandler.getInstance().collect(threadPoolStats, dtpProperties.getCollectorTypes());
@@ -79,15 +105,15 @@ public class DtpMonitor implements ApplicationRunner {
         }
     }
 
+    /**
+     * 发布采集事件
+     */
     private void publishCollectEvent() {
         CollectEvent event = new CollectEvent(this, dtpProperties);
         ApplicationContextHolder.publishEvent(event);
     }
 
-    private void publishAlarmCheckEvent() {
-        AlarmCheckEvent event = new AlarmCheckEvent(this, dtpProperties);
-        ApplicationContextHolder.publishEvent(event);
-    }
+
 
     public static void destroy() {
         MONITOR_EXECUTOR.shutdownNow();

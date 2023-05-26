@@ -20,7 +20,7 @@ import java.util.Objects;
 import static org.dromara.dynamictp.common.constant.DingNotifyConst.DING_NOTICE_TITLE;
 
 /**
- * DingNotifier related
+ * 钉钉
  *
  * @author yanhom
  * @since 1.0.0

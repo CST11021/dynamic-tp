@@ -37,13 +37,24 @@ public class CuratorUtil {
 
     private static final CountDownLatch COUNT_DOWN_LATCH = new CountDownLatch(1);
 
-    private CuratorUtil() { }
+    private CuratorUtil() {
 
+    }
+
+    /**
+     * 创建zk客户端
+     *
+     * @param dtpProperties
+     * @return
+     */
     public static CuratorFramework getCuratorFramework(DtpProperties dtpProperties) {
         if (curatorFramework == null) {
+            // 获取zk配置，创建zk客户端
             DtpProperties.Zookeeper zookeeper = dtpProperties.getZookeeper();
             curatorFramework = CuratorFrameworkFactory.newClient(zookeeper.getZkConnectStr(),
                     new ExponentialBackoffRetry(1000, 3));
+
+            // 创建zk监听
             final ConnectionStateListener connectionStateListener = (client, newState) -> {
                 if (newState == ConnectionState.CONNECTED) {
                     COUNT_DOWN_LATCH.countDown();
@@ -51,6 +62,7 @@ public class CuratorUtil {
             };
             curatorFramework.getConnectionStateListenable().addListener(connectionStateListener);
             curatorFramework.start();
+
             try {
                 COUNT_DOWN_LATCH.await();
             } catch (InterruptedException e) {
@@ -61,12 +73,26 @@ public class CuratorUtil {
         return curatorFramework;
     }
 
+    /**
+     * 创建zk的配置节点：/${rootNode}/${node}
+     *
+     * @param dtpProperties
+     * @return
+     */
     public static String nodePath(DtpProperties dtpProperties) {
         DtpProperties.Zookeeper zookeeper = dtpProperties.getZookeeper();
-        return ZKPaths.makePath(ZKPaths.makePath(zookeeper.getRootNode(),
-                zookeeper.getConfigVersion()), zookeeper.getNode());
+        return ZKPaths.makePath(
+                ZKPaths.makePath(zookeeper.getRootNode(), zookeeper.getConfigVersion()),
+                zookeeper.getNode()
+        );
     }
 
+    /**
+     * 获取配置信息
+     *
+     * @param dtpProperties
+     * @return
+     */
     @SneakyThrows
     public static Map<Object, Object> genPropertiesMap(DtpProperties dtpProperties) {
 
@@ -74,6 +100,7 @@ public class CuratorUtil {
         String nodePath = nodePath(dtpProperties);
 
         Map<Object, Object> result = Maps.newHashMap();
+        // properties、json类型的配置
         if (PROPERTIES.getValue().equalsIgnoreCase(dtpProperties.getConfigType().trim())) {
             result = genPropertiesTypeMap(nodePath, curatorFramework);
         } else if (JSON.getValue().equalsIgnoreCase(dtpProperties.getConfigType().trim())) {
@@ -85,6 +112,13 @@ public class CuratorUtil {
         return result;
     }
 
+    /**
+     * 获取zk节点的配置信息
+     *
+     * @param nodePath
+     * @param curatorFramework
+     * @return
+     */
     private static Map<Object, Object> genPropertiesTypeMap(String nodePath, CuratorFramework curatorFramework) {
         try {
             final GetChildrenBuilder childrenBuilder = curatorFramework.getChildren();
@@ -103,6 +137,13 @@ public class CuratorUtil {
         }
     }
 
+    /**
+     * 获取zk节点的配置信息
+     *
+     * @param path
+     * @param curatorFramework
+     * @return
+     */
     private static String getVal(String path, CuratorFramework curatorFramework) {
         final GetDataBuilder data = curatorFramework.getData();
         String value = "";

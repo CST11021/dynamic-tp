@@ -43,6 +43,12 @@ public final class NotifierHandler {
         NOTIFIERS.put(larkNotifier.platform(), larkNotifier);
     }
 
+    /**
+     * 发送变更的消息通知
+     *
+     * @param oldFields
+     * @param diffs
+     */
     public void sendNotice(TpMainFields oldFields, List<String> diffs) {
         NotifyItem notifyItem = DtpNotifyCtxHolder.get().getNotifyItem();
         for (String platformId : notifyItem.getPlatformIds()) {
@@ -55,6 +61,11 @@ public final class NotifierHandler {
         }
     }
 
+    /**
+     * 发送预警消息通知
+     *
+     * @param notifyItemEnum
+     */
     public void sendAlarm(NotifyItemEnum notifyItemEnum) {
         NotifyItem notifyItem = DtpNotifyCtxHolder.get().getNotifyItem();
         for (String platformId : notifyItem.getPlatformIds()) {

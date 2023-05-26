@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Objects;
 
 /**
- * WechatNotifier related
+ * 企业微信
  *
  * @author yanhom
  * @since 1.0.0

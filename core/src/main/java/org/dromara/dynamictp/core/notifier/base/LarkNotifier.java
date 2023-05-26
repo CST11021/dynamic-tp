@@ -22,7 +22,7 @@ import static org.dromara.dynamictp.common.constant.LarkNotifyConst.SIGN_PARAM;
 import static org.dromara.dynamictp.common.constant.LarkNotifyConst.SIGN_REPLACE;
 
 /**
- * LarkNotifier
+ * 飞书
  *
  * @author fxbin
  * @version v1.0

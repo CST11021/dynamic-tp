@@ -1,0 +1,18 @@
+InternalLogCollector: 线程池状态采集
+
+DtpProperties: 对应spring.dynamic.tp路径下的配置
+
+
+NotifierHandler: 消息通知
+NotifyPlatform: 消息平台
+NotifyItemEnum: 消息的内容
+
+DtpNotifier
+    Notifier:
+        DingNotifier:
+        EmailNotifier:
+        LarkNotifier:
+        WechatNotifier:
+
+
+ZookeeperRefresher：zk配置监听

@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 
 /**
- * EmailNotifier related
+ * 邮件
  *
  * @author ljinfeng
  * @since 1.0.8

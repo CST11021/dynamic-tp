@@ -19,44 +19,21 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class DtpExecutorProps extends TpExecutorProps {
 
-    /**
-     * Executor type, used in create phase, see {@link com.dtp.core.support.ExecutorType}
-     */
+    /** 线程池的类型, 线程创建的时候生效，参见: com.dtp.core.support.ExecutorType */
     private String executorType;
-
-    /**
-     * Blocking queue type, see {@link QueueTypeEnum}
-     */
+    /** 任务队列的类型, 参见：{@link QueueTypeEnum} */
     private String queueType = QueueTypeEnum.VARIABLE_LINKED_BLOCKING_QUEUE.getName();
-
-    /**
-     * BlockingQueue capacity.
-     */
+    /** 任务队列大小 */
     private int queueCapacity = 1024;
-
-    /**
-     * If fair strategy, for SynchronousQueue
-     */
+    /** 是否启用公平策略, for SynchronousQueue */
     private boolean fair = false;
-
-    /**
-     * Max free memory for MemorySafeLBQ, unit M
-     */
+    /** MemorySafeLBQ的最大可用内存, unit M */
     private int maxFreeMemory = 16;
-
-    /**
-     * RejectedExecutionHandler type, see {@link RejectedTypeEnum}
-     */
+    /** RejectedExecutionHandler type, see {@link RejectedTypeEnum} */
     private String rejectedHandlerType = RejectedTypeEnum.ABORT_POLICY.getName();
-
-    /**
-     * If allow core thread timeout.
-     */
+    /** If allow core thread timeout. */
     private boolean allowCoreThreadTimeOut = false;
-
-    /**
-     * Thread name prefix.
-     */
+    /** Thread name prefix. */
     private String threadNamePrefix = "dtp";
 
     /**
@@ -82,19 +59,12 @@ public class DtpExecutorProps extends TpExecutorProps {
      */
     private boolean rejectEnhanced = true;
 
-    /**
-     * Task execute timeout, unit (ms), just for statistics.
-     */
+    /** Task execute timeout, unit (ms), just for statistics. */
     private long runTimeout = 0;
-
-    /**
-     * Task queue wait timeout, unit (ms), just for statistics.
-     */
+    /** Task queue wait timeout, unit (ms), just for statistics. */
     private long queueTimeout = 0;
 
-    /**
-     * Task wrapper names.
-     */
+    /** Task wrapper names. */
     private Set<String> taskWrapperNames;
 
     /**

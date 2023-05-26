@@ -35,32 +35,17 @@ import static org.dromara.dynamictp.common.constant.DynamicTpConst.TRACE_ID;
  * @since 1.0.0
  **/
 @Slf4j
-public class DtpExecutor extends ThreadPoolExecutor
-        implements SpringExecutor, ExecutorAdapter<ThreadPoolExecutor> {
+public class DtpExecutor extends ThreadPoolExecutor implements SpringExecutor, ExecutorAdapter<ThreadPoolExecutor> {
 
-    /**
-     * The name of the thread pool.
-     */
+    /** 线程池名称 */
     protected String threadPoolName;
-
-    /**
-     * Simple Business alias Name of Dynamic ThreadPool. Use for notify.
-     */
+    /** 给线程池定义的别名，用于消息通知 */
     private String threadPoolAliasName;
-
-    /**
-     * If enable notify.
-     */
+    /** 是否启动消息通知 */
     private boolean notifyEnabled = true;
-
-    /**
-     * Notify items, see {@link NotifyItemEnum}.
-     */
+    /** 消息通知配置，参见：{@link NotifyItemEnum}. */
     private List<NotifyItem> notifyItems;
-
-    /**
-     * Notify platform ids.
-     */
+    /** 消息通知的平台ID */
     private List<String> platformIds;
 
     /**
@@ -73,9 +58,7 @@ public class DtpExecutor extends ThreadPoolExecutor
      */
     private boolean preStartAllCoreThreads;
 
-    /**
-     * RejectHandler type.
-     */
+    /** 拒绝处理策略*/
     private String rejectHandlerType;
 
     /**
@@ -87,7 +70,6 @@ public class DtpExecutor extends ThreadPoolExecutor
      * Task execute timeout, unit (ms), just for statistics.
      */
     private long runTimeout;
-
     /**
      * Task queue wait timeout, unit (ms), just for statistics.
      */
@@ -97,12 +79,10 @@ public class DtpExecutor extends ThreadPoolExecutor
      * Total reject count.
      */
     private final LongAdder rejectCount = new LongAdder();
-
     /**
      * Count run timeout tasks.
      */
     private final LongAdder runTimeoutCount = new LongAdder();
-
     /**
      * Count queue wait timeout tasks.
      */

@@ -46,20 +46,38 @@ public abstract class AbstractRefresher implements Refresher {
         }
     }
 
+    /**
+     * zk配置变更时，调用该方法，刷新本地的配置
+     *
+     * @param properties    zk的配置信息
+     */
     protected void doRefresh(Map<Object, Object> properties) {
         if (MapUtils.isEmpty(properties)) {
             log.warn("DynamicTp refresh, empty properties.");
             return;
         }
+
+        // 刷新spring容器配置
         PropertiesBinder.bindDtpProperties(properties, dtpProperties);
+        // 刷新DtpRegistry的配置，并发布配置变更事件
         doRefresh(dtpProperties);
     }
 
+    /**
+     * 刷新DtpRegistry的配置，并发布配置变更事件
+     *
+     * @param dtpProperties
+     */
     protected void doRefresh(DtpProperties dtpProperties) {
         DtpRegistry.refresh(dtpProperties);
         publishEvent(dtpProperties);
     }
 
+    /**
+     * 发布配置变更事件
+     *
+     * @param dtpProperties
+     */
     private void publishEvent(DtpProperties dtpProperties) {
         RefreshEvent event = new RefreshEvent(this, dtpProperties);
         ApplicationContextHolder.publishEvent(event);

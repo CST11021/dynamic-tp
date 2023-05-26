@@ -26,6 +26,7 @@ public class PropertiesBinder {
         ConfigurationPropertySource sources = new MapConfigurationPropertySource(properties);
         Binder binder = new Binder(sources);
         ResolvableType type = ResolvableType.forClass(DtpProperties.class);
+        // withExistingValue: 如果变更配置时，把配置的key移除了，则不会生效，只会更新有值的配置项
         Bindable<?> target = Bindable.of(type).withExistingValue(dtpProperties);
         binder.bind(MAIN_PROPERTIES_PREFIX, target);
     }
@@ -33,6 +34,7 @@ public class PropertiesBinder {
     public static void bindDtpProperties(Environment environment, DtpProperties dtpProperties) {
         Binder binder = Binder.get(environment);
         ResolvableType type = ResolvableType.forClass(DtpProperties.class);
+        // withExistingValue: 如果变更配置时，把配置的key移除了，则不会生效，只会更新有值的配置项
         Bindable<?> target = Bindable.of(type).withExistingValue(dtpProperties);
         binder.bind(MAIN_PROPERTIES_PREFIX, target);
     }

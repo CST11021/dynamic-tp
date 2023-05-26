@@ -33,11 +33,18 @@ public class ExecutorConverter {
         return mainFields;
     }
 
+    /**
+     * 获取线程池状态
+     *
+     * @param wrapper
+     * @return
+     */
     public static ThreadPoolStats toMetrics(ExecutorWrapper wrapper) {
         ExecutorAdapter<?> executor = wrapper.getExecutor();
         if (executor == null) {
             return null;
         }
+
         ThreadPoolStats poolStats = convertCommon(executor);
         poolStats.setPoolName(wrapper.getThreadPoolName());
         if (executor instanceof DtpExecutor) {

@@ -21,6 +21,12 @@ import org.springframework.core.env.Environment;
 public class ZookeeperRefresher extends AbstractRefresher implements EnvironmentAware, InitializingBean {
 
     @Override
+    public void setEnvironment(Environment environment) {
+        ConfigurableEnvironment env = ((ConfigurableEnvironment) environment);
+        env.getPropertySources().remove(ZkConfigEnvironmentProcessor.ZK_PROPERTY_SOURCE_NAME);
+    }
+
+    @Override
     public void afterPropertiesSet() {
 
         final ConnectionStateListener connectionStateListener = (client, newState) -> {
@@ -53,15 +59,10 @@ public class ZookeeperRefresher extends AbstractRefresher implements Environment
     }
 
     /**
-     * load config and refresh
+     * zk重连时，或者节点配置变更新时，调用该方法
      */
     private void loadAndRefresh() {
         doRefresh(CuratorUtil.genPropertiesMap(dtpProperties));
     }
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        ConfigurableEnvironment env = ((ConfigurableEnvironment) environment);
-        env.getPropertySources().remove(ZkConfigEnvironmentProcessor.ZK_PROPERTY_SOURCE_NAME);
-    }
 }

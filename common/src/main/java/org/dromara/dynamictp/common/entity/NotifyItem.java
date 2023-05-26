@@ -21,34 +21,18 @@ import static java.util.stream.Collectors.toList;
 @Data
 public class NotifyItem {
 
-    /**
-     * Notify platform id
-     */
-    private List<String> platformIds;
-
-    /**
-     * If enabled notify.
-     */
+    /** 是否启用消息通知 */
     private boolean enabled = true;
-
-    /**
-     * Notify item, see {@link NotifyItemEnum}
-     */
+    /** 消息通知的平台ID */
+    private List<String> platformIds;
+    /** 消息通知的类型：参见 {@link NotifyItemEnum} */
     private String type;
 
-    /**
-     * Alarm threshold.
-     */
+    /** Alarm threshold. */
     private int threshold;
-
-    /**
-     * Alarm interval, time unit（s）
-     */
+    /** Alarm interval, time unit（s） */
     private int interval = 120;
-
-    /**
-     * Cluster notify limit.
-     */
+    /** Cluster notify limit. */
     private int clusterLimit = 1;
 
     public static List<NotifyItem> mergeSimpleNotifyItems(List<NotifyItem> source) {

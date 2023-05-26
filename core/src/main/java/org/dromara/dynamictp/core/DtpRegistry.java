@@ -52,19 +52,34 @@ public class DtpRegistry implements ApplicationRunner {
      * Maintain all automatically registered and manually registered Executors(DtpExecutors and JUC ThreadPoolExecutors).
      */
     private static final Map<String, ExecutorWrapper> EXECUTOR_REGISTRY = new ConcurrentHashMap<>();
-
     /**
      * equator for comparing two TpMainFields
      */
     private static final Equator EQUATOR = new GetterBaseEquator();
-
     /**
      * dtp properties
      */
     private static DtpProperties dtpProperties;
 
+
+
     public DtpRegistry(DtpProperties dtpProperties) {
         DtpRegistry.dtpProperties = dtpProperties;
+    }
+
+
+    @Override
+    public void run(ApplicationArguments args) {
+        Set<String> remoteExecutors = Collections.emptySet();
+        if (CollectionUtils.isNotEmpty(dtpProperties.getExecutors())) {
+            remoteExecutors = dtpProperties.getExecutors().stream()
+                    .map(DtpExecutorProps::getThreadPoolName)
+                    .collect(Collectors.toSet());
+        }
+        val registeredExecutors = Sets.newHashSet(EXECUTOR_REGISTRY.keySet());
+        val localExecutors = CollectionUtils.subtract(registeredExecutors, remoteExecutors);
+        log.info("DtpRegistry has been initialized, remote executors: {}, local executors: {}",
+                remoteExecutors, localExecutors);
     }
 
     /**
@@ -309,17 +324,5 @@ public class DtpRegistry implements ApplicationRunner {
                 props.getThreadPoolName(), blockingQueue.getClass().getSimpleName());
     }
 
-    @Override
-    public void run(ApplicationArguments args) {
-        Set<String> remoteExecutors = Collections.emptySet();
-        if (CollectionUtils.isNotEmpty(dtpProperties.getExecutors())) {
-            remoteExecutors = dtpProperties.getExecutors().stream()
-                    .map(DtpExecutorProps::getThreadPoolName)
-                    .collect(Collectors.toSet());
-        }
-        val registeredExecutors = Sets.newHashSet(EXECUTOR_REGISTRY.keySet());
-        val localExecutors = CollectionUtils.subtract(registeredExecutors, remoteExecutors);
-        log.info("DtpRegistry has been initialized, remote executors: {}, local executors: {}",
-                remoteExecutors, localExecutors);
-    }
+
 }

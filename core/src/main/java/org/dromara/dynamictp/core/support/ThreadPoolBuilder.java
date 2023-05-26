@@ -38,60 +38,65 @@ import java.util.concurrent.TimeUnit;
 public class ThreadPoolBuilder {
 
     /**
+     * Default inner thread factory.
+     */
+    private ThreadFactory threadFactory = new NamedThreadFactory("dtp");
+    /**
      * Name of Dynamic ThreadPool.
      */
     private String threadPoolName = "DynamicTp";
-
+    /**
+     * If pre start all core threads.
+     */
+    private boolean preStartAllCoreThreads = false;
     /**
      * CoreSize of ThreadPool.
      */
     private int corePoolSize = 1;
-
     /**
      * MaxSize of ThreadPool.
      */
     private int maximumPoolSize = DynamicTpConst.AVAILABLE_PROCESSORS;
-
     /**
      * When the number of threads is greater than the core,
      * this is the maximum time that excess idle threads
      * will wait for new tasks before terminating
      */
     private long keepAliveTime = 60;
-
     /**
      * Timeout unit.
      */
     private TimeUnit timeUnit = TimeUnit.SECONDS;
-
-    /**
-     * Blocking queue, see {@link QueueTypeEnum}
-     */
-    private BlockingQueue<Runnable> workQueue = new VariableLinkedBlockingQueue<>(1024);
-
     /**
      * Queue capacity
      */
     private int queueCapacity = 1024;
+    /**
+     * Blocking queue, see {@link QueueTypeEnum}
+     */
+    private BlockingQueue<Runnable> workQueue = new VariableLinkedBlockingQueue<>(1024);
+    /**
+     * RejectedExecutionHandler, see {@link RejectedTypeEnum}
+     */
+    private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.AbortPolicy();
+
+
+
+
+    /** 消息通知配置, 参见：{@link NotifyItemEnum} */
+    private List<NotifyItem> notifyItems = NotifyItem.getAllNotifyItems();
+    /** 消息通知的平台ID */
+    private List<String> platformIds = Lists.newArrayList();
+    /** 是否启用消息通知 */
+    private boolean notifyEnabled = true;
+
 
     /**
      * Max free memory for MemorySafeLBQ, unit M
      */
     private int maxFreeMemory = 256;
 
-    /**
-     * RejectedExecutionHandler, see {@link RejectedTypeEnum}
-     */
-    private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.AbortPolicy();
-
-    /**
-     * Default inner thread factory.
-     */
-    private ThreadFactory threadFactory = new NamedThreadFactory("dtp");
-
-    /**
-     * If allow core thread timeout.
-     */
+    /** true时，当线程池没有任务时，会销毁所有的进程 */
     private boolean allowCoreThreadTimeOut = false;
 
     /**
@@ -112,10 +117,7 @@ public class ThreadPoolBuilder {
      */
     private int awaitTerminationSeconds = 0;
 
-    /**
-     * If io intensive thread pool.
-     * default false, true indicate cpu intensive thread pool.
-     */
+    /** 是否是IO密集型线程池，默认为false，表示cpu密集型 */
     private boolean ioIntensive = false;
 
     /**
@@ -123,16 +125,10 @@ public class ThreadPoolBuilder {
      * default false, true ordered thread pool.
      */
     private boolean ordered = false;
-
     /**
      * If scheduled executor, default false.
      */
     private boolean scheduled = false;
-
-    /**
-     * If pre start all core threads.
-     */
-    private boolean preStartAllCoreThreads = false;
 
     /**
      * If enhance reject.
@@ -143,7 +139,6 @@ public class ThreadPoolBuilder {
      * Task execute timeout, unit (ms), just for statistics.
      */
     private long runTimeout = 0;
-
     /**
      * Task queue wait timeout, unit (ms), just for statistics.
      */
@@ -154,20 +149,10 @@ public class ThreadPoolBuilder {
      */
     private final List<TaskWrapper> taskWrappers = Lists.newArrayList();
 
-    /**
-     * Notify items, see {@link NotifyItemEnum}
-     */
-    private List<NotifyItem> notifyItems = NotifyItem.getAllNotifyItems();
 
-    /**
-     * Notify platform id
-     */
-    private List<String> platformIds = Lists.newArrayList();
 
-    /**
-     * If enable notify.
-     */
-    private boolean notifyEnabled = true;
+
+    // builder 构造器
 
     private ThreadPoolBuilder() {
     }
@@ -378,24 +363,25 @@ public class ThreadPoolBuilder {
         }
     }
 
+
+
+
     /**
-     * Build a dynamic ThreadPoolExecutor.
+     * 创建一个动态线程池
      *
      * @return the newly created DtpExecutor instance
      */
     public DtpExecutor buildDynamic() {
         return buildDtpExecutor(this);
     }
-
     /**
-     * Build common ThreadPoolExecutor.
+     * 创建一个普通的线程池
      *
      * @return the newly created ThreadPoolExecutor instance
      */
     public ThreadPoolExecutor buildCommon() {
         return buildCommonExecutor(this);
     }
-
     /**
      * Build thread pool executor and wrapper with ttl
      *
@@ -434,6 +420,25 @@ public class ThreadPoolBuilder {
         dtpExecutor.setNotifyEnabled(builder.notifyEnabled);
         dtpExecutor.setRejectHandler(builder.rejectedExecutionHandler);
         return dtpExecutor;
+    }
+    /**
+     * Build common threadPoolExecutor, does not manage by DynamicTp framework.
+     *
+     * @param builder the targeted builder
+     * @return the newly created ThreadPoolExecutor instance
+     */
+    private ThreadPoolExecutor buildCommonExecutor(ThreadPoolBuilder builder) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                builder.corePoolSize,
+                builder.maximumPoolSize,
+                builder.keepAliveTime,
+                builder.timeUnit,
+                builder.workQueue,
+                builder.threadFactory,
+                builder.rejectedExecutionHandler
+        );
+        executor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
+        return executor;
     }
 
     private DtpExecutor createInternal(ThreadPoolBuilder builder) {
@@ -480,23 +485,5 @@ public class ThreadPoolBuilder {
         return dtpExecutor;
     }
 
-    /**
-     * Build common threadPoolExecutor, does not manage by DynamicTp framework.
-     *
-     * @param builder the targeted builder
-     * @return the newly created ThreadPoolExecutor instance
-     */
-    private ThreadPoolExecutor buildCommonExecutor(ThreadPoolBuilder builder) {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                builder.corePoolSize,
-                builder.maximumPoolSize,
-                builder.keepAliveTime,
-                builder.timeUnit,
-                builder.workQueue,
-                builder.threadFactory,
-                builder.rejectedExecutionHandler
-        );
-        executor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
-        return executor;
-    }
+
 }
