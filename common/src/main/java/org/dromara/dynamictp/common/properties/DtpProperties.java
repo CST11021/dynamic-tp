@@ -62,71 +62,69 @@ public class DtpProperties {
     private Etcd etcd;
 
 
+    // web服务器
 
     /**
      * Tomcat worker thread pool.
      */
     private TpExecutorProps tomcatTp;
-
     /**
      * Jetty thread pool.
      */
     private TpExecutorProps jettyTp;
-
-    /**
-     * Undertow thread pool.
-     */
+    /** Undertow thread pool. */
     private TpExecutorProps undertowTp;
+
+    // web客户端
+
+    /** Okhttp3 thread pools. */
+    private List<TpExecutorProps> okhttp3Tp;
+
+    // RPC框架
 
     /**
      * Dubbo thread pools.
      */
     private List<TpExecutorProps> dubboTp;
-
     /**
-     * Hystrix thread pools.
+     * Grpc thread pools.
      */
-    private List<TpExecutorProps> hystrixTp;
+    private List<TpExecutorProps> grpcTp;
+    /**
+     * Brpc thread pools.
+     */
+    private List<TpExecutorProps> brpcTp;
+    /** Motan server thread pools. */
+    private List<TpExecutorProps> motanTp;
+    /** Tars thread pools. */
+    private List<TpExecutorProps> tarsTp;
+    /** Sofa thread pools. */
+    private List<TpExecutorProps> sofaTp;
+
+    // MQ
 
     /**
      * RocketMq thread pools.
      */
     private List<TpExecutorProps> rocketMqTp;
-
-    /**
-     * Grpc thread pools.
-     */
-    private List<TpExecutorProps> grpcTp;
-
-    /**
-     * Motan server thread pools.
-     */
-    private List<TpExecutorProps> motanTp;
-
-    /**
-     * Okhttp3 thread pools.
-     */
-    private List<TpExecutorProps> okhttp3Tp;
-
-    /**
-     * Brpc thread pools.
-     */
-    private List<TpExecutorProps> brpcTp;
-
-    /**
-     * Tars thread pools.
-     */
-    private List<TpExecutorProps> tarsTp;
-
-    /**
-     * Sofa thread pools.
-     */
-    private List<TpExecutorProps> sofaTp;
-
     /**
      * Rabbitmq thread pools.
      */
     private List<TpExecutorProps> rabbitmqTp;
+
+
+    /** Hystrix thread pools：Hystrix具备服务熔断、服务降级、线程和影响隔离以及实施指标监控等功能 */
+    private List<TpExecutorProps> hystrixTp;
+
+
+
+
+
+
+
+
+
+
 
     @Data
     public static class Nacos {
