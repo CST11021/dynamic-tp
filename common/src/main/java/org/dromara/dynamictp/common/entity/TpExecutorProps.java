@@ -16,45 +16,25 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class TpExecutorProps {
 
-    /**
-     * Name of ThreadPool.
-     */
+    /** 线程池名称 */
     private String threadPoolName;
-    /**
-     * Simple Alias Name of  ThreadPool. Use for notify.
-     */
+    /** 给线程池定义的别名，用于消息通知 */
     private String threadPoolAliasName;
-    /**
-     * CoreSize of ThreadPool.
-     */
+    /** 核心线程数 */
     private int corePoolSize = 1;
-    /**
-     * MaxSize of ThreadPool.
-     */
+    /** 最大线程数 */
     private int maximumPoolSize = DynamicTpConst.AVAILABLE_PROCESSORS;
-    /**
-     * When the number of threads is greater than the core,
-     * this is the maximum time that excess idle threads
-     * will wait for new tasks before terminating.
-     */
+    /** 线程存活时间 */
     private long keepAliveTime = 60;
-    /**
-     * Timeout unit.
-     */
+    /** Timeout unit */
     private TimeUnit unit = TimeUnit.SECONDS;
 
 
-    /**
-     * If enable notify.
-     */
+    /** 是否启用消息通知 */
     private boolean notifyEnabled = true;
-    /**
-     * Notify platform id
-     */
+    /** 消息通知平台标识 */
     private List<String> platformIds;
-    /**
-     * Notify items, see {@link NotifyItemEnum}
-     */
+    /** 消息通知平台配置，参见：{@link NotifyItemEnum} */
     private List<NotifyItem> notifyItems;
 
 }

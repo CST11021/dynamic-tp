@@ -40,11 +40,9 @@ public class NamedThreadFactory implements ThreadFactory {
         group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
         this.namePrefix = namePrefix;
     }
-
     public NamedThreadFactory(String namePrefix) {
         this(namePrefix, false, Thread.NORM_PRIORITY);
     }
-
     public NamedThreadFactory(String namePrefix, boolean daemon) {
         this(namePrefix, daemon, Thread.NORM_PRIORITY);
     }

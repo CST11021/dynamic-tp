@@ -12,4 +12,5 @@ public abstract class AbstractCollector implements MetricsCollector {
     public boolean support(String type) {
         return this.type().equalsIgnoreCase(type);
     }
+
 }

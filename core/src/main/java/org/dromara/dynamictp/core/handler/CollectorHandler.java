@@ -38,10 +38,21 @@ public final class CollectorHandler {
         COLLECTORS.put(internalLogCollector.type(), internalLogCollector);
     }
 
+    public static CollectorHandler getInstance() {
+        return CollectorHandlerHolder.INSTANCE;
+    }
+
+    /**
+     * 采集线程池状态日志
+     *
+     * @param poolStats     线程池状态
+     * @param types         采集类型
+     */
     public void collect(ThreadPoolStats poolStats, List<String> types) {
         if (poolStats == null || CollectionUtils.isEmpty(types)) {
             return;
         }
+
         for (String collectorType : types) {
             MetricsCollector collector = COLLECTORS.get(collectorType.toLowerCase());
             if (collector != null) {
@@ -50,10 +61,9 @@ public final class CollectorHandler {
         }
     }
 
-    public static CollectorHandler getInstance() {
-        return CollectorHandlerHolder.INSTANCE;
-    }
-
+    /**
+     * 单例模式类
+     */
     private static class CollectorHandlerHolder {
         private static final CollectorHandler INSTANCE = new CollectorHandler();
     }

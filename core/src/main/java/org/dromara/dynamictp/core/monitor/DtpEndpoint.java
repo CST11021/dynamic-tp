@@ -38,13 +38,19 @@ public class DtpEndpoint {
         if (MapUtils.isNotEmpty(handlerMap)) {
             handlerMap.forEach((k, v) -> metricsList.addAll(v.getMultiPoolStats()));
         }
+
+        metricsList.add(buildJvmStats());
+        return metricsList;
+    }
+
+    private JvmStats buildJvmStats() {
         JvmStats jvmStats = new JvmStats();
         Runtime runtime = Runtime.getRuntime();
         jvmStats.setMaxMemory(FileUtil.readableFileSize(runtime.maxMemory()));
         jvmStats.setTotalMemory(FileUtil.readableFileSize(runtime.totalMemory()));
         jvmStats.setFreeMemory(FileUtil.readableFileSize(runtime.freeMemory()));
         jvmStats.setUsableMemory(FileUtil.readableFileSize(runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory()));
-        metricsList.add(jvmStats);
-        return metricsList;
+
+        return jvmStats;
     }
 }

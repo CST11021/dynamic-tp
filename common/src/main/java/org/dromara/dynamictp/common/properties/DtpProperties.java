@@ -25,12 +25,9 @@ public class DtpProperties {
 
     /** 配置文件的类型 */
     private String configType = "yml";
-
-    /**
-     * If enabled DynamicTp.
-     */
+    /** 是否是动态线程池 */
     private boolean enabled = true;
-    /** If print banner. */
+    /** 是否打印banner，参见：DtpBannerPrinter类 */
     private boolean enabledBanner = true;
 
     /** 消息平台 */
@@ -40,12 +37,13 @@ public class DtpProperties {
 
     /** 是否采集线程池状态 */
     private boolean enabledCollect = false;
-    /** 采集类型 */
-    private List<String> collectorTypes = Lists.newArrayList(CollectorTypeEnum.MICROMETER.name());
-    /** Metrics log storage path, just for "logging" type. */
-    private String logPath;
     /** 采集的时间间隔，默认5秒 */
     private int monitorInterval = 5;
+    /** 当采集类型为logging时，对应log日志文件的路径 */
+    private String logPath;
+    /** 采集类型 */
+    private List<String> collectorTypes = Lists.newArrayList(CollectorTypeEnum.MICROMETER.name());
+
 
     /** 线程池配置 */
     private List<DtpExecutorProps> executors;
@@ -124,7 +122,7 @@ public class DtpProperties {
 
 
 
-
+    // 配置类
 
     @Data
     public static class Nacos {

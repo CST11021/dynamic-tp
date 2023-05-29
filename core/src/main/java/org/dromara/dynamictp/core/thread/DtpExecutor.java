@@ -53,9 +53,7 @@ public class DtpExecutor extends ThreadPoolExecutor implements SpringExecutor, E
      */
     private List<TaskWrapper> taskWrappers = Lists.newArrayList();
 
-    /**
-     * If pre start all core threads.
-     */
+    /** If pre start all core threads. */
     private boolean preStartAllCoreThreads;
 
     /** 拒绝处理策略*/
@@ -109,7 +107,6 @@ public class DtpExecutor extends ThreadPoolExecutor implements SpringExecutor, E
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 Executors.defaultThreadFactory(), new AbortPolicy());
     }
-
     public DtpExecutor(int corePoolSize,
                        int maximumPoolSize,
                        long keepAliveTime,
@@ -119,7 +116,6 @@ public class DtpExecutor extends ThreadPoolExecutor implements SpringExecutor, E
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 threadFactory, new AbortPolicy());
     }
-
     public DtpExecutor(int corePoolSize,
                        int maximumPoolSize,
                        long keepAliveTime,
@@ -129,7 +125,6 @@ public class DtpExecutor extends ThreadPoolExecutor implements SpringExecutor, E
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 Executors.defaultThreadFactory(), handler);
     }
-
     public DtpExecutor(int corePoolSize,
                        int maximumPoolSize,
                        long keepAliveTime,

@@ -42,7 +42,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
      * @return the core pool size
      */
     int getCorePoolSize();
-
     /**
      * Set the core pool size
      *
@@ -56,7 +55,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
      * @return the maximum pool size
      */
     int getMaximumPoolSize();
-
     /**
      * Set the maximum pool size
      *
@@ -172,7 +170,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
         //default unsupported
         return null;
     }
-
     /**
      * Set the rejected execution handler
      *
@@ -192,7 +189,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
                 .map(h -> h.getClass().getSimpleName())
                 .orElse("unknown");
     }
-
     /**
      * Get the rejected task count
      *
@@ -212,7 +208,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
         //default unsupported
         return false;
     }
-
     /**
      * Allow core thread time out
      *
@@ -232,7 +227,6 @@ public interface ExecutorAdapter<E extends Executor> extends Executor {
         //default unsupported
         return -1;
     }
-
     /**
      * Set the keep alive time
      *

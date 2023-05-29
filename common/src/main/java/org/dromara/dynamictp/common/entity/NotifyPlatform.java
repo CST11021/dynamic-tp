@@ -13,28 +13,18 @@ import java.util.UUID;
 @Data
 public class NotifyPlatform {
 
-    /**
-     * Notify platform id.
-     */
+    /** Notify platform id. */
     private String platformId = UUID.randomUUID().toString();
 
-    /**
-     * Notify platform name.
-     */
+    /** Notify platform name. */
     private String platform;
 
-    /**
-     * Token of url.
-     */
+    /** Token of url. */
     private String urlKey;
 
-    /**
-     * Secret, may be null.
-     */
+    /** Secret, may be null. */
     private String secret;
 
-    /**
-     * Receivers, split by ,
-     */
+    /** Receivers, split by */
     private String receivers = "all";
 }

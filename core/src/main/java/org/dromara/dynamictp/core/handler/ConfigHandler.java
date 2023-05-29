@@ -34,6 +34,14 @@ public final class ConfigHandler {
         PARSERS.add(new JsonConfigParser());
     }
 
+    /**
+     * 解析配置
+     *
+     * @param content   配置内容
+     * @param type      配置的文本类型，参见{@link ConfigFileTypeEnum}
+     * @return
+     * @throws IOException
+     */
     public Map<Object, Object> parseConfig(String content, ConfigFileTypeEnum type) throws IOException {
         for (ConfigParser parser : PARSERS) {
             if (parser.supports(type)) {

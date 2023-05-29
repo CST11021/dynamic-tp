@@ -20,60 +20,52 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 public class EagerDtpExecutor extends DtpExecutor {
 
-    /**
-     * The number of tasks submitted but not yet finished.
-     */
+    /** 已提交但尚未完成的任务数 */
     private final AtomicInteger submittedTaskCount = new AtomicInteger(0);
     
-    public EagerDtpExecutor(int corePoolSize,
-                            int maximumPoolSize,
-                            long keepAliveTime,
-                            TimeUnit unit,
-                            BlockingQueue<Runnable> workQueue) {
+    public EagerDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 Executors.defaultThreadFactory(), new AbortPolicy());
     }
-    
-    public EagerDtpExecutor(int corePoolSize,
-                            int maximumPoolSize,
-                            long keepAliveTime,
-                            TimeUnit unit,
-                            BlockingQueue<Runnable> workQueue,
-                            ThreadFactory threadFactory) {
+    public EagerDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 threadFactory, new AbortPolicy());
     }
-    
-    public EagerDtpExecutor(int corePoolSize,
-                            int maximumPoolSize,
-                            long keepAliveTime,
-                            TimeUnit unit,
-                            BlockingQueue<Runnable> workQueue,
-                            RejectedExecutionHandler handler) {
+    public EagerDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 Executors.defaultThreadFactory(), handler);
     }
-    
-    public EagerDtpExecutor(int corePoolSize,
-                            int maximumPoolSize,
-                            long keepAliveTime,
-                            TimeUnit unit,
-                            BlockingQueue<Runnable> workQueue,
-                            ThreadFactory threadFactory,
-                            RejectedExecutionHandler handler) {
+    public EagerDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
 
+    /**
+     * 获取当前还未执行完成的任务数量
+     *
+     * @return
+     */
     public int getSubmittedTaskCount() {
         return submittedTaskCount.get();
     }
 
+    /**
+     * 任务执行完后数量-1
+     *
+     * @param r the runnable that has completed
+     * @param t the exception that caused termination, or null if
+     * execution completed normally
+     */
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         submittedTaskCount.decrementAndGet();
         super.afterExecute(r, t);
     }
 
+    /**
+     * 提交任务的时候+1
+     *
+     * @param command the runnable task
+     */
     @Override
     public void execute(Runnable command) {
         if (command == null) {

@@ -19,6 +19,12 @@ public class ExecutorConverter {
 
     private ExecutorConverter() { }
 
+    /**
+     * 获取线程池的核心字段
+     *
+     * @param executorWrapper
+     * @return
+     */
     public static TpMainFields toMainFields(ExecutorWrapper executorWrapper) {
         TpMainFields mainFields = new TpMainFields();
         mainFields.setThreadPoolName(executorWrapper.getThreadPoolName());
@@ -58,6 +64,12 @@ public class ExecutorConverter {
         return poolStats;
     }
 
+    /**
+     * 获取线程池状态
+     *
+     * @param executor
+     * @return
+     */
     private static ThreadPoolStats convertCommon(ExecutorAdapter<?> executor) {
         return ThreadPoolStats.builder()
                 .corePoolSize(executor.getCorePoolSize())

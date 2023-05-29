@@ -19,3 +19,31 @@ DtpNotifier
 
 
 ZookeeperRefresher：zk配置监听
+
+
+
+ThreadGroup: 可以把thread的名字统一起来。一起处理catch。ThreadGroup是Java提供的一种对线程进行分组管理的手段，可以对所有线程以组为单位进行操作，如设置优先级、守护线程等。
+
+
+
+
+
+
+1、当线程池小于corePoolSize时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程。
+2、当线程池达到corePoolSize时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
+3、当workQueue已满，且maximumPoolSize>corePoolSize时，新提交任务会创建新线程执行任务
+4、当提交任务数超过maximumPoolSize时，新提交任务由RejectedExecutionHandler处理
+5、当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程
+6、当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+7、preStartAllCoreThreads：线程池在完成初始化之后,默认情况下,线程池中不会有任何线程,线程池会等有任务来的时候再去创建线程，当preStartAllCoreThreads为true时，线程池启动的时候就创建相应的线程数量，例如：Tomcat在启动线程池的时候就已经初始化了所有核心线程，线程池启动
+
+
+
+关于MemorySafeLBQ队列
+    使用无参的LinkedBlockingQueue会有OOM的风险，
+    如果想避免这个OOM就需要在初始化的时候指定一个合理的值。但是这个值到底是多少呢，基本上说不准。
+    可以使用MemoryLimitedLBQ来代替这个队列，我可以限制这个队列可以使用的最大内存为100M，通过限制内存的方式来达到避免OOM的目的。
+    MemorySafeLBQ和MemoryLimitedLBQ类似，MemorySafeLBQ限制的是JVM里面的剩余空间。比如默认就是当整个JVM只剩下 256M 可用内存的时候，再往队列里面加元素我就不让你加了。
+
+
+

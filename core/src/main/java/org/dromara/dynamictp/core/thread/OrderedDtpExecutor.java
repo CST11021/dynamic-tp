@@ -24,10 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
- * {@link OrderedDtpExecutor} can ensure that the delivered tasks are executed
- * according to the key and task submission order. It is applicable to scenarios
- * where the throughput is improved through parallel processing and the tasks
- * are run in a certain order.
+ * {@link OrderedDtpExecutor}可以保证交付的任务按照key和任务提交顺序执行。
+ * 它适用于通过并行处理提高吞吐量并且任务按一定顺序运行的场景。
  *
  * @author yanhom
  * @since 1.1.3
@@ -39,42 +37,18 @@ public class OrderedDtpExecutor extends DtpExecutor {
 
     private final List<Executor> childExecutors = Lists.newArrayList();
 
-    public OrderedDtpExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue) {
-        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                Executors.defaultThreadFactory(), new AbortPolicy());
+    public OrderedDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), new AbortPolicy());
     }
-
-    public OrderedDtpExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory) {
+    public OrderedDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 threadFactory, new AbortPolicy());
     }
-
-    public OrderedDtpExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue,
-                              RejectedExecutionHandler handler) {
+    public OrderedDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
                 Executors.defaultThreadFactory(), handler);
     }
-
-    public OrderedDtpExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory,
-                              RejectedExecutionHandler handler) {
+    public OrderedDtpExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
         for (int i = 0; i < corePoolSize; i++) {
             ChildExecutor childExecutor = new ChildExecutor(workQueue.size() + workQueue.remainingCapacity());
@@ -131,14 +105,6 @@ public class OrderedDtpExecutor extends DtpExecutor {
         super.execute(command);
     }
 
-    void onBeforeExecute(Thread t, Runnable r) {
-        beforeExecute(t, r);
-    }
-
-    void onAfterExecute(Runnable r, Throwable t) {
-        afterExecute(r, t);
-    }
-
     @Override
     public long getCompletedTaskCount() {
         long count = 0;
@@ -180,6 +146,26 @@ public class OrderedDtpExecutor extends DtpExecutor {
         DtpRunnable dtpRunnable = (DtpRunnable) wrapTasks(command);
         dtpRunnable.startQueueTimeoutTask(this);
         return dtpRunnable;
+    }
+
+    /**
+     * 任务执行前被调用
+     *
+     * @param t
+     * @param r
+     */
+    void onBeforeExecute(Thread t, Runnable r) {
+        beforeExecute(t, r);
+    }
+
+    /**
+     * 任务执行完成后被调用
+     *
+     * @param r
+     * @param t
+     */
+    void onAfterExecute(Runnable r, Throwable t) {
+        afterExecute(r, t);
     }
 
     private final class ChildExecutor implements Executor, Runnable {
@@ -243,6 +229,11 @@ public class OrderedDtpExecutor extends DtpExecutor {
             }
         }
 
+        /**
+         * 从任务队列中poll一个任务
+         *
+         * @return
+         */
         private synchronized Runnable getTask() {
             Runnable task = taskQueue.poll();
             if (task == null) {
@@ -251,18 +242,38 @@ public class OrderedDtpExecutor extends DtpExecutor {
             return task;
         }
 
+        /**
+         * 获取任务队列
+         *
+         * @return
+         */
         public BlockingQueue<Runnable> getTaskQueue() {
             return taskQueue;
         }
 
+        /**
+         * 获取任务数量：包括已执行完成的任务和当前队列中的任务
+         *
+         * @return
+         */
         public long getTaskCount() {
             return completedTaskCount.sum() + taskQueue.size();
         }
 
+        /**
+         * 获取指定完成的任务数量
+         *
+         * @return
+         */
         public long getCompletedTaskCount() {
             return completedTaskCount.sum();
         }
 
+        /**
+         * 获取被拒绝的任务数量
+         *
+         * @return
+         */
         public long getRejectedTaskCount() {
             return rejectedTaskCount.sum();
         }
