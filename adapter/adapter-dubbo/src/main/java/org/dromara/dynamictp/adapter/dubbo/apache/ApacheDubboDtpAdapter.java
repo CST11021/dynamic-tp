@@ -35,11 +35,6 @@ public class ApacheDubboDtpAdapter extends AbstractDtpAdapter {
     private static final String EXECUTOR_SERVICE_COMPONENT_KEY = ExecutorService.class.getName();
 
     @Override
-    public void refresh(DtpProperties dtpProperties) {
-        refresh(NAME, dtpProperties.getDubboTp(), dtpProperties.getPlatforms());
-    }
-
-    @Override
     protected void initialize() {
         super.initialize();
         String currVersion = Version.getVersion();
@@ -75,6 +70,13 @@ public class ApacheDubboDtpAdapter extends AbstractDtpAdapter {
         }
         log.info("DynamicTp adapter, apache dubbo provider executors init end, executors: {}", executors);
     }
+
+    @Override
+    public void refresh(DtpProperties dtpProperties) {
+        refresh(NAME, dtpProperties.getDubboTp(), dtpProperties.getPlatforms());
+    }
+
+
 
     private void doInit(String port, ThreadPoolExecutor executor) {
         val name = genTpName(port);

@@ -128,10 +128,7 @@ public abstract class AbstractDtpAdapter implements DtpAdapter, GenericApplicati
         executorWrappers.forEach((k, v) -> refresh(name, v, platforms, tmpMap.get(k)));
     }
 
-    public void refresh(String name,
-                        ExecutorWrapper executorWrapper,
-                        List<NotifyPlatform> platforms,
-                        TpExecutorProps props) {
+    public void refresh(String name, ExecutorWrapper executorWrapper, List<NotifyPlatform> platforms, TpExecutorProps props) {
 
         if (Objects.isNull(props) || Objects.isNull(executorWrapper) || containsInvalidParams(props, log)) {
             return;
@@ -161,9 +158,7 @@ public abstract class AbstractDtpAdapter implements DtpAdapter, GenericApplicati
         return ExecutorConverter.toMainFields(executorWrapper);
     }
 
-    protected void doRefresh(ExecutorWrapper executorWrapper,
-                             List<NotifyPlatform> platforms,
-                             TpExecutorProps props) {
+    protected void doRefresh(ExecutorWrapper executorWrapper, List<NotifyPlatform> platforms, TpExecutorProps props) {
 
         val executor = executorWrapper.getExecutor();
         doRefreshPoolSize(executor, props);
