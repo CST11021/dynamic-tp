@@ -15,14 +15,14 @@ import java.util.List;
 public interface DtpNotifier {
 
     /**
-     * Get the platform name.
+     * 获取消息平台的名称
      *
      * @return platform
      */
     String platform();
 
     /**
-     * Send change notify message.
+     * 发送配置变更的消息
      *
      * @param notifyPlatform notify platform
      * @param oldFields      old properties
@@ -31,7 +31,7 @@ public interface DtpNotifier {
     void sendChangeMsg(NotifyPlatform notifyPlatform, TpMainFields oldFields, List<String> diffs);
 
     /**
-     * Send alarm message.
+     * 发送线程池预警消息
      *
      * @param notifyPlatform notify platform
      * @param notifyItemEnum notify item enum

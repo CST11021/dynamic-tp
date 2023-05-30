@@ -45,15 +45,22 @@ import static org.dromara.dynamictp.core.notifier.manager.NotifyHelper.getAllAla
 @Slf4j
 public abstract class AbstractDtpNotifier implements DtpNotifier {
 
+    /** 具体的消息通知实现类 */
     protected Notifier notifier;
 
     protected AbstractDtpNotifier() {
     }
-
     protected AbstractDtpNotifier(Notifier notifier) {
         this.notifier = notifier;
     }
 
+    /**
+     * 发送配置变更的消息
+     *
+     * @param notifyPlatform notify platform
+     * @param oldFields      old properties
+     * @param diffs          the changed keys
+     */
     @Override
     public void sendChangeMsg(NotifyPlatform notifyPlatform, TpMainFields oldFields, List<String> diffs) {
         String content = buildNoticeContent(notifyPlatform, oldFields, diffs);
@@ -64,6 +71,12 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
         notifier.send(notifyPlatform, content);
     }
 
+    /**
+     * 发送线程池预警消息
+     *
+     * @param notifyPlatform notify platform
+     * @param notifyItemEnum notify item enum
+     */
     @Override
     public void sendAlarmMsg(NotifyPlatform notifyPlatform, NotifyItemEnum notifyItemEnum) {
         String content = buildAlarmContent(notifyPlatform, notifyItemEnum);
@@ -75,26 +88,12 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
     }
 
     /**
-     * Implement by subclass, get notice template.
+     * build预警消息内容
      *
-     * @return notice template
+     * @param platform
+     * @param notifyItemEnum
+     * @return
      */
-    protected abstract String getNoticeTemplate();
-
-    /**
-     * Implement by subclass, get alarm template.
-     *
-     * @return alarm template
-     */
-    protected abstract String getAlarmTemplate();
-
-    /**
-     * Implement by subclass, get content color config.
-     *
-     * @return left: highlight color, right: other content color
-     */
-    protected abstract Pair<String, String> getColors();
-
     protected String buildAlarmContent(NotifyPlatform platform, NotifyItemEnum notifyItemEnum) {
         AlarmCtx context = (AlarmCtx) DtpNotifyCtxHolder.get();
         ExecutorWrapper executorWrapper = context.getExecutorWrapper();
@@ -135,6 +134,14 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
         return highlightAlarmContent(content, notifyItemEnum);
     }
 
+    /**
+     * build配置变更消息内容
+     *
+     * @param platform
+     * @param oldFields
+     * @param diffs
+     * @return
+     */
     protected String buildNoticeContent(NotifyPlatform platform, TpMainFields oldFields, List<String> diffs) {
         BaseNotifyCtx context = DtpNotifyCtxHolder.get();
         ExecutorWrapper executorWrapper = context.getExecutorWrapper();
@@ -159,6 +166,34 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
         return highlightNotifyContent(content, diffs);
     }
 
+    /**
+     * 消息通知模板
+     *
+     * @return notice template
+     */
+    protected abstract String getNoticeTemplate();
+
+    /**
+     * 消息通知模板
+     *
+     * @return alarm template
+     */
+    protected abstract String getAlarmTemplate();
+
+    /**
+     * Implement by subclass, get content color config.
+     *
+     * @return left: highlight color, right: other content color
+     */
+    protected abstract Pair<String, String> getColors();
+
+    /**
+     * 消息接收人
+     *
+     * @param platform
+     * @param receives
+     * @return
+     */
     private String getReceives(String platform, String receives) {
         if (StringUtils.isBlank(receives)) {
             return "";
@@ -174,6 +209,12 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
                 .collect(Collectors.joining(" "));
     }
 
+    /**
+     * 填充线程池别名
+     *
+     * @param executorWrapper
+     * @return
+     */
     protected String populatePoolName(ExecutorWrapper executorWrapper) {
         String poolAlisaName = executorWrapper.getThreadPoolAliasName();
         if (StringUtils.isBlank(poolAlisaName)) {
@@ -182,6 +223,13 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
         return executorWrapper.getThreadPoolName() + "(" + poolAlisaName + ")";
     }
 
+    /**
+     * 高亮消息文本
+     *
+     * @param content
+     * @param diffs
+     * @return
+     */
     private String highlightNotifyContent(String content, List<String> diffs) {
         if (StringUtils.isBlank(content)) {
             return content;
@@ -197,6 +245,13 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
         return content;
     }
 
+    /**
+     * 高亮消息文本
+     *
+     * @param content
+     * @param notifyItemEnum
+     * @return
+     */
     private String highlightAlarmContent(String content, NotifyItemEnum notifyItemEnum) {
         if (StringUtils.isBlank(content)) {
             return content;

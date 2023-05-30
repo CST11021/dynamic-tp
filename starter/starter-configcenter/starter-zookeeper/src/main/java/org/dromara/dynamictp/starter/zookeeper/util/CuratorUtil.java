@@ -100,7 +100,7 @@ public class CuratorUtil {
         String nodePath = nodePath(dtpProperties);
 
         Map<Object, Object> result = Maps.newHashMap();
-        // properties、json类型的配置
+        // zk仅支持：properties、json类型的配置
         if (PROPERTIES.getValue().equalsIgnoreCase(dtpProperties.getConfigType().trim())) {
             result = genPropertiesTypeMap(nodePath, curatorFramework);
         } else if (JSON.getValue().equalsIgnoreCase(dtpProperties.getConfigType().trim())) {

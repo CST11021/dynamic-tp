@@ -37,6 +37,7 @@ public class ApolloRefresher extends AbstractRefresher implements ConfigFileChan
             realNamespace = apollo.getNamespace();
         }
 
+        // 推断文件类型
         configFileType = deduceFileType(realNamespace);
         namespace = realNamespace.replaceAll("." + configFileType.getValue(), "");
         ConfigFileFormat configFileFormat = ConfigFileFormat.fromString(configFileType.getValue());
@@ -55,6 +56,12 @@ public class ApolloRefresher extends AbstractRefresher implements ConfigFileChan
         refresh(content, configFileType);
     }
 
+    /**
+     * 推断配置的文本类型
+     *
+     * @param namespace
+     * @return
+     */
     private ConfigFileTypeEnum deduceFileType(String namespace) {
         ConfigFileTypeEnum configFileFormat = ConfigFileTypeEnum.PROPERTIES;
         if (namespace.contains(ConfigFileTypeEnum.YAML.getValue())) {

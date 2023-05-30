@@ -11,7 +11,7 @@ import org.dromara.dynamictp.common.em.ConfigFileTypeEnum;
 public interface Refresher {
 
     /**
-     * Refresh with specify content.
+     * 当配置变更时，调用该方法刷新本地的线程池配置
      *
      * @param content content
      * @param fileType file type
